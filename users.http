@@ -1,0 +1,15 @@
+###
+POST http://localhost:8000/predict
+Content-Type: application/json
+
+{
+    "attended_events": [
+        {"event_id": 101, "category": "Music", "company_id": 1},
+        {"event_id": 102, "category": "Art", "company_id": 2},
+        {"event_id": 103, "category": "Art", "company_id": 2}
+    ],
+    "future_events": [
+        {"event_id": 103, "category": "Music", "company_id": 1},
+        {"event_id": 104, "category": "Art", "company_id": 3}
+    ]
+}
