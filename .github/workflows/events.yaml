@@ -24,7 +24,7 @@ jobs:
         docker buildx create --use
         docker buildx build \
           --file Dockerfile \
-          --tag <docker-hub-user-name>/<docker-hub-respository-name>:latest \
+          --tag ilyaselmabrouki/event_recommendation:latest \
           --push .
 
     env:
