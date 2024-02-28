@@ -1,4 +1,4 @@
-name: Deploy FastAPI Application
+name: FastAPI Docker Build and Push
 
 on:
   push:
@@ -6,26 +6,27 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout Repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: Login to Docker Hub
+      run: echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-    - name: Install dependencies
+    - name: Build and push Docker image
       run: |
-        pip install -r requirements.txt
+        docker buildx create --use
+        docker buildx build \
+          --file Dockerfile \
+          --tag <docker-hub-user-name>/<docker-hub-respository-name>:latest \
+          --push .
 
-    - name: Run Tests
-      run: |
-        pytest
-
-    - name: Deploy Application
-      run: |
-        uvicorn main:app --host 0.0.0.0 --port $PORT --workers 4
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      DOCKER_BUILDKIT: 1
